@@ -1,7 +1,22 @@
 package main.java;
 
-public abstract class Option {
+abstract class Option {
 
-	public abstract double price(double spot, double strike, double volatility, double compoundingRate, double dividendRate,
-			double timeToMaturity);
+	double spot;
+	double strike;
+	double volatility;
+	double compoundingRate;
+	double dividendRate;
+	double timeToMaturity;
+
+	Option(double spot, double strike, double volatility, double compoundingRate, double dividendRate, double timeToMaturity) {
+		this.spot = spot;
+		this.strike = strike;
+		this.volatility = volatility;
+		this.compoundingRate = compoundingRate;
+		this.dividendRate = dividendRate;
+		this.timeToMaturity = timeToMaturity;
+	}
+
+	abstract double price();
 }

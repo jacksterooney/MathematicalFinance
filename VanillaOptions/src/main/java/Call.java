@@ -1,14 +1,19 @@
 package main.java;
 
+import static main.java.StandardFormulae.*;
+
 public class Call extends Option {
 
-	@Override
-	public double price(double spot, double strike, double volatility, double compoundingRate, double dividendRate,
-			double timeToMaturity) {
+	Call(double spot, double strike, double volatility, double compoundingRate, double dividendRate, double timeToMaturity) {
+		super(spot, strike, volatility, compoundingRate, dividendRate, timeToMaturity);
+	}
 
-		// Similar to call options, using put-call parity
-		double d1 = StandardFormulae.d(1, spot, strike, volatility, compoundingRate, timeToMaturity);
-		double d2 = StandardFormulae.d(2, spot, strike, volatility, compoundingRate, timeToMaturity);
-		return StandardFormulae.blackScholes(spot, strike, compoundingRate, timeToMaturity, d1, d2);
+	@Override
+	public double price() {
+
+		// Uses the black-scholes model for european calls
+		return cumulativeNormal(d1(spot, strike, volatility, compoundingRate, timeToMaturity))
+				- cumulativeNormal(d2(spot, strike, volatility, compoundingRate, timeToMaturity))
+				* pv(strike, compoundingRate, timeToMaturity);
 	}
 }

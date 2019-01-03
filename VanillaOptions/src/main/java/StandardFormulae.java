@@ -1,6 +1,6 @@
 package main.java;
 
-public class StandardFormulae {
+public final class StandardFormulae {
 
 	/*
 	 * Cumulative normal function, as described on page 417 of The Concepts and Practices of Quantitive Finance
@@ -21,14 +21,20 @@ public class StandardFormulae {
 	}
 
 	/*
-	 * Black-scholes formula, as described on page 61
+	 * Black-scholes formula sub-equations, as described by
+	 * https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model#Black%E2%80%93Scholes_formula
 	 */
-	static double blackScholes(double spot, double strike, double compoundingRate, double timeToMaturity, double d1, double d2) {
-		return spot * cumulativeNormal(d1) - strike * Math.exp(-compoundingRate * timeToMaturity) * cumulativeNormal(d2);
+	static double d1(double spot, double strike, double volatility, double compoundingRate, double timeToMaturity) {
+		return (1/(volatility * Math.sqrt(timeToMaturity))) *
+				(Math.log(spot/strike) + (compoundingRate + Math.pow(volatility, 2) / 2) * timeToMaturity);
 	}
 
-	static double d(int index, double spot, double strike, double volatility, double compoundingRate, double timeToMaturity) {
-		return Math.log(spot / strike) + (compoundingRate + Math.pow(-1, index - 1) * 0.5 * Math.pow(volatility, 2))
-				* timeToMaturity / volatility * Math.sqrt(timeToMaturity);
+	static double d2(double spot, double strike, double volatility, double compoundingRate, double timeToMaturity) {
+		return d1(spot, strike, volatility, compoundingRate, timeToMaturity)
+				- volatility * Math.sqrt(timeToMaturity);
+	}
+
+	static double pv(double strike, double compoundingRate, double timeToMaturity) {
+		return strike * Math.exp(-compoundingRate * timeToMaturity);
 	}
 }
